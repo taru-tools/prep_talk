@@ -1,0 +1,11 @@
+{
+    "include": [
+      "next-env.d.ts",
+      "**/*.ts",
+      "**/*.tsx",
+      ".next/types/**/*.ts",
+      "app/types/**/*.d.ts"
+    ]
+  }
+  
+  
