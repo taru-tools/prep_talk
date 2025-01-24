@@ -1,2 +1,2 @@
-export OPENAI_API_KEY=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
+export OPENAI_API_KEY='redacted'
 
