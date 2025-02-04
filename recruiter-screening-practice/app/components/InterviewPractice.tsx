@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "../../components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card"
 import SpeechRecognition from "./SpeechRecognition"
@@ -23,6 +23,17 @@ export default function InterviewPractice() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [showSpeechRecognition, setShowSpeechRecognition] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    // Check if we're in a browser environment
+    if (typeof window !== "undefined") {
+      // Check if speech recognition is supported
+      if (!("SpeechRecognition" in window) && !("webkitSpeechRecognition" in window)) {
+        setError("Speech recognition is not supported in this browser.")
+      }
+    }
+  }, [])
 
   const handleSpeechResult = async (result: string) => {
     console.log("Speech recognition result:", result)
@@ -37,7 +48,7 @@ export default function InterviewPractice() {
       setFeedback(response)
     } catch (error) {
       console.error("Error processing speech:", error)
-      setFeedback("An error occurred while processing your answer. Please try again.")
+      setError("An error occurred while processing your answer. Please try again.")
     }
     setIsProcessing(false)
     setShowSpeechRecognition(false)
@@ -45,7 +56,7 @@ export default function InterviewPractice() {
 
   const handleSpeechError = (error: string) => {
     console.error("Speech recognition error:", error)
-    setFeedback(error)
+    setError(error)
     setShowSpeechRecognition(false)
   }
 
@@ -53,6 +64,20 @@ export default function InterviewPractice() {
     setCurrentQuestionIndex((prevIndex) => (prevIndex + 1) % recruiterQuestions.length)
     setFeedback("")
     setShowSpeechRecognition(false)
+    setError(null)
+  }
+
+  if (error) {
+    return (
+      <Card className="w-full max-w-4xl mx-auto">
+        <CardContent className="p-6">
+          <p className="text-red-500">{error}</p>
+          <Button onClick={() => setError(null)} className="mt-4">
+            Try Again
+          </Button>
+        </CardContent>
+      </Card>
+    )
   }
 
   return (
