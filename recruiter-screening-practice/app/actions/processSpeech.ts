@@ -1,20 +1,20 @@
-'use server'
+"use server"
 
-import { generateText } from 'ai'
-import { openai } from '@ai-sdk/openai'
+import { generateText } from "ai"
+import { openai } from "@ai-sdk/openai"
 
 interface FeedbackStructure {
-  relevance: string;
-  clarity: string;
-  positiveAspects: string;
-  areasForImprovement: string;
-  suggestions: string;
+  relevance: string
+  clarity: string
+  positiveAspects: string
+  areasForImprovement: string
+  suggestions: string
 }
 
 export async function processSpeech(question: string, speech: string): Promise<string> {
   console.log("Processing speech. Question:", question, "Answer:", speech)
-  
-  if (!speech || speech.trim() === '') {
+
+  if (!speech || speech.trim() === "") {
     return "I'm sorry, but I didn't receive any speech input. Could you please try speaking again?"
   }
 
@@ -40,7 +40,7 @@ export async function processSpeech(question: string, speech: string): Promise<s
     `
 
     const { text } = await generateText({
-      model: openai('gpt-4o-mini'),
+      model: openai("gpt-3.5-turbo"),
       prompt: prompt,
     })
 
@@ -48,7 +48,7 @@ export async function processSpeech(question: string, speech: string): Promise<s
 
     // Extract JSON from the response
     const jsonMatch = text.match(/\{[\s\S]*\}/)
-    const jsonString = jsonMatch ? jsonMatch[0] : '{}'
+    const jsonString = jsonMatch ? jsonMatch[0] : "{}"
 
     // Parse the JSON response
     const feedbackStructure: FeedbackStructure = JSON.parse(jsonString)
@@ -89,8 +89,8 @@ export async function processSpeech(question: string, speech: string): Promise<s
 
     return formattedFeedback.trim()
   } catch (error) {
-    console.error('Error processing speech:', error)
-    return 'Sorry, there was an error processing your answer. Please try again.'
+    console.error("Error processing speech:", error)
+    return "Sorry, there was an error processing your answer. Please try again."
   }
 }
 
