@@ -40,7 +40,7 @@ export async function processSpeech(question: string, speech: string): Promise<s
     `
 
     const { text } = await generateText({
-      model: openai("gpt-3.5-turbo"),
+      model: openai("gpt-4o-mini"),
       prompt: prompt,
     })
 
