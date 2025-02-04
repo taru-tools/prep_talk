@@ -1,10 +1,10 @@
-'use client'
+"use client"
 
-import { useState } from 'react'
-import { Button } from '../../components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card'
-import SpeechRecognition from './SpeechRecognition'
-import { processSpeech } from '../actions/processSpeech'
+import { useState } from "react"
+import { Button } from "../../components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card"
+import SpeechRecognition from "./SpeechRecognition"
+import { processSpeech } from "../actions/processSpeech"
 
 const recruiterQuestions = [
   "Tell me about yourself and your background.",
@@ -15,11 +15,11 @@ const recruiterQuestions = [
   "Why are you looking to leave your current role?",
   "What are your strengths and weaknesses?",
   "Where do you see yourself in 5 years?",
-  "Do you have any questions for me about the role or company?"
+  "Do you have any questions for me about the role or company?",
 ]
 
 export default function InterviewPractice() {
-  const [feedback, setFeedback] = useState('')
+  const [feedback, setFeedback] = useState("")
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [showSpeechRecognition, setShowSpeechRecognition] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -51,7 +51,7 @@ export default function InterviewPractice() {
 
   const handleNextQuestion = () => {
     setCurrentQuestionIndex((prevIndex) => (prevIndex + 1) % recruiterQuestions.length)
-    setFeedback('')
+    setFeedback("")
     setShowSpeechRecognition(false)
   }
 
@@ -62,13 +62,9 @@ export default function InterviewPractice() {
       </CardHeader>
       <CardContent className="space-y-4">
         {!showSpeechRecognition && !isProcessing && (
-          <Button onClick={() => setShowSpeechRecognition(true)}>
-            Start Recording
-          </Button>
+          <Button onClick={() => setShowSpeechRecognition(true)}>Start Recording</Button>
         )}
-        {showSpeechRecognition && (
-          <SpeechRecognition onResult={handleSpeechResult} onError={handleSpeechError} />
-        )}
+        {showSpeechRecognition && <SpeechRecognition onResult={handleSpeechResult} onError={handleSpeechError} />}
         {isProcessing && <p>Processing your answer...</p>}
         {feedback && (
           <div className="mt-4">
@@ -76,8 +72,11 @@ export default function InterviewPractice() {
             <div dangerouslySetInnerHTML={{ __html: feedback }} />
           </div>
         )}
-        <Button onClick={handleNextQuestion} disabled={isProcessing}>Next Question</Button>
+        <Button onClick={handleNextQuestion} disabled={isProcessing}>
+          Next Question
+        </Button>
       </CardContent>
     </Card>
   )
 }
+
