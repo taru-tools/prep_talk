@@ -1,12 +1,12 @@
-import './globals.css'
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import "./globals.css"
+import { Inter } from "next/font/google"
+import type React from "react" // Import React
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] })
 
-export const metadata: Metadata = {
-  title: 'Recruiter Screening Call Practice',
-  description: 'Practice your answers for recruiter screening calls with AI-powered feedback',
+export const metadata = {
+  title: "Interview Practice Assistant",
+  description: "Practice your interview skills with AI feedback",
 }
 
 export default function RootLayout({
