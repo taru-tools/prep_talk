@@ -90,7 +90,6 @@ export async function processSpeech(question: string, speech: string): Promise<s
     return formattedFeedback.trim()
   } catch (error) {
     console.error("Error processing speech:", error)
-    return "Sorry, there was an error processing your answer. Please try again."
+    throw new Error("Sorry, there was an error processing your answer. Please try again.")
   }
 }
-
