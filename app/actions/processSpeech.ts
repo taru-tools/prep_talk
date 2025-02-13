@@ -40,7 +40,7 @@ export async function processSpeech(question: string, speech: string): Promise<s
     `
 
     const { text } = await generateText({
-      model: openai(process.env.OPENAI_API_KEY as string),
+      model: openai("gpt-4o-mini"),
       prompt: prompt,
     })
 
