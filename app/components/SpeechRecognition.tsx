@@ -71,7 +71,24 @@ export default function SpeechRecognition({ onResult, onError }: SpeechRecogniti
 
     recognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
       console.error("Speech recognition error", event.error, event.message)
-      onError(`Speech recognition error: ${event.error}. ${event.message || ""}`)
+      let errorMessage = `Speech recognition error: ${event.error}.`
+
+      switch (event.error) {
+        case "network":
+          errorMessage += " Please check your internet connection and try again."
+          break
+        case "not-allowed":
+        case "service-not-allowed":
+          errorMessage += " Please make sure you've granted microphone permissions to this site."
+          break
+        case "aborted":
+          errorMessage += " The speech recognition was aborted."
+          break
+        default:
+          errorMessage += " " + (event.message || "Please try again.")
+      }
+
+      onError(errorMessage)
       setIsListening(false)
     }
 
@@ -89,7 +106,7 @@ export default function SpeechRecognition({ onResult, onError }: SpeechRecogniti
       console.error("Error starting speech recognition:", error)
       onError("Error starting speech recognition")
     }
-  }, [onResult, onError, transcript])
+  }, [onResult, onError])
 
   const stopRecognition = useCallback(() => {
     if (recognitionRef.current) {
@@ -115,14 +132,18 @@ export default function SpeechRecognition({ onResult, onError }: SpeechRecogniti
   }
 
   return (
-    <div className="mt-4">
-      <Button onClick={handleToggleListening}>{isListening ? "Stop Listening" : "Start Listening"}</Button>
-      <p className="font-semibold mt-2">Status: {isListening ? "Listening..." : "Not listening"}</p>
-      <p className="font-semibold mt-2">Transcript:</p>
-      <p>
-        {transcript}
-        <span className="text-gray-500">{interimTranscript}</span>
-      </p>
+    <div className="mt-4 space-y-4">
+      <Button onClick={handleToggleListening} className="w-full">
+        {isListening ? "Stop Listening" : "Start Listening"}
+      </Button>
+      <p className="font-semibold">Status: {isListening ? "Listening..." : "Not listening"}</p>
+      <div className="bg-gray-50 p-4 rounded-md">
+        <p className="font-semibold mb-2">Transcript:</p>
+        <p>
+          {transcript}
+          <span className="text-gray-500">{interimTranscript}</span>
+        </p>
+      </div>
     </div>
   )
 }

@@ -24,11 +24,10 @@ export default function InterviewPractice() {
   const [showSpeechRecognition, setShowSpeechRecognition] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   useEffect(() => {
-    // Check if we're in a browser environment
     if (typeof window !== "undefined") {
-      // Check if speech recognition is supported
       if (!("SpeechRecognition" in window) && !("webkitSpeechRecognition" in window)) {
         setError("Speech recognition is not supported in this browser.")
       }
@@ -56,7 +55,7 @@ export default function InterviewPractice() {
 
   const handleSpeechError = (error: string) => {
     console.error("Speech recognition error:", error)
-    setError(error)
+    setErrorMessage(error)
     setShowSpeechRecognition(false)
   }
 
@@ -65,11 +64,12 @@ export default function InterviewPractice() {
     setFeedback("")
     setShowSpeechRecognition(false)
     setError(null)
+    setErrorMessage(null)
   }
 
   if (error) {
     return (
-      <Card className="w-full max-w-4xl mx-auto">
+      <Card className="w-full">
         <CardContent className="p-6">
           <p className="text-red-500">{error}</p>
           <Button onClick={() => setError(null)} className="mt-4">
@@ -81,26 +81,44 @@ export default function InterviewPractice() {
   }
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
+    <Card className="w-full">
       <CardHeader>
-        <CardTitle>{recruiterQuestions[currentQuestionIndex]}</CardTitle>
+        <CardTitle className="text-xl font-bold">{recruiterQuestions[currentQuestionIndex]}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {errorMessage && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <strong className="font-bold">Error: </strong>
+            <span className="block sm:inline">{errorMessage}</span>
+          </div>
+        )}
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold mb-2">Instructions:</h3>
+          <ol className="list-decimal list-inside text-sm">
+            <li>Click "Start Recording" when you're ready to answer.</li>
+            <li>Speak clearly into your microphone.</li>
+            <li>The recording will automatically stop after a brief pause in speech.</li>
+            <li>If you encounter issues, try refreshing the page or checking your browser settings.</li>
+          </ol>
+        </div>
         {!showSpeechRecognition && !isProcessing && (
-          <Button onClick={() => setShowSpeechRecognition(true)}>Start Recording</Button>
+          <Button onClick={() => setShowSpeechRecognition(true)} className="w-full">
+            Start Recording
+          </Button>
         )}
         {showSpeechRecognition && <SpeechRecognition onResult={handleSpeechResult} onError={handleSpeechError} />}
-        {isProcessing && <p>Processing your answer...</p>}
+        {isProcessing && <p className="text-center">Processing your answer...</p>}
         {feedback && (
           <div className="mt-4">
             <h3 className="text-lg font-semibold mb-2">Feedback:</h3>
-            <div dangerouslySetInnerHTML={{ __html: feedback }} />
+            <div dangerouslySetInnerHTML={{ __html: feedback }} className="bg-gray-50 p-4 rounded-md" />
           </div>
         )}
-        <Button onClick={handleNextQuestion} disabled={isProcessing}>
+        <Button onClick={handleNextQuestion} disabled={isProcessing} className="w-full mt-4">
           Next Question
         </Button>
       </CardContent>
     </Card>
   )
 }
+
